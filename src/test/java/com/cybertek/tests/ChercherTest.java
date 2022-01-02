@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -83,6 +84,40 @@ public class ChercherTest {
         wait = new WebDriverWait(driver,12);
         wait.until(ExpectedConditions.elementToBeClickable(disabledButton));
         Assert.assertTrue(disabledButton.isEnabled());
+    }
+
+
+    @Test
+    public void test3(){
+        driver.get("http://secure.smartbearsoftware.com/samples/testcomplete12/WebOrders/login.aspx");
+
+        driver.findElement(By.id("ctl00_MainContent_username")).sendKeys("Tester");
+        driver.findElement(By.id("ctl00_MainContent_password")).sendKeys("test");
+        driver.findElement(By.id("ctl00_MainContent_login_button")).click();
+
+        driver.findElement(By.linkText("Order")).click();
+
+        WebElement productDropdown = driver.findElement(By.id("ctl00_MainContent_fmwOrder_ddlProduct"));
+
+        Select pDropdown = new Select(productDropdown);
+
+        Assert.assertEquals(pDropdown.getFirstSelectedOption().getText(), "MyMoney", "Selected Product failed");
+
+        pDropdown.selectByIndex(1);
+        WebElement quantityInput = driver.findElement(By.id("ctl00_MainContent_fmwOrder_txtQuantity"));
+        WebElement priceInput = driver.findElement(By.id("ctl00_MainContent_fmwOrder_txtUnitPrice"));
+        WebElement totalInput = driver.findElement(By.id("ctl00_MainContent_fmwOrder_txtTotal"));
+
+
+        quantityInput.clear();
+        quantityInput.sendKeys("2");
+        driver.findElement(By.cssSelector("[value='Calculate']")).click();
+
+        int total = Integer.parseInt(quantityInput.getAttribute("value")) * Integer.parseInt(priceInput.getAttribute("value"));
+        Assert.assertEquals(totalInput.getAttribute("value"), Integer.toString(total), "Calculation failed");
+        System.out.println("totalInput.getAttribute(\"value\") = " + totalInput.getAttribute("value"));
+
+
     }
 
 }
