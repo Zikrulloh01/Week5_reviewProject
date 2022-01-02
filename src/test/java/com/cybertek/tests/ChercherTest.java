@@ -7,6 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -21,9 +22,24 @@ public class ChercherTest {
     2. Click on "Click me, to Open an alert after 5 seconds"
     3. Explicitly wait until alert is present
     4. Then handle the Javascript alert
+
+     Task2:
+    1. Go to https://chercher.tech/practice/explicit-wait-sample-selenium-webdriver
+    2. Click on "Enable button after 10 seconds"
+    3. Explicitly wait until the button is enabled
+    4. Then verify the button is enabled
+    Task3:
+    1. Go to:  http://secure.smartbearsoftware.com/samples/testcomplete12/WebOrders/login.aspx
+    2. Login with username: Tester, password: test
+    3. Click  Order button
+    4. Verify under Product Information, selected option is “MyMoney”
+    5. Then select FamilyAlbum, make quantity 2, and click Calculate,
+    6. Then verify Total is equal to Quantity*PricePerUnit
+
      */
 
     WebDriver driver;
+    WebDriverWait wait;
 
     @BeforeMethod
     public void setUp(){
@@ -43,7 +59,7 @@ public class ChercherTest {
     }
 
     @Test
-    public void jsAlertTest(){
+    public void task1(){
 
         driver.get("https://chercher.tech/practice/explicit-wait-sample-selenium-webdriver");
 
@@ -51,10 +67,22 @@ public class ChercherTest {
         button.click();
 
 
-        WebDriverWait wait = new WebDriverWait(driver,10);
+        wait = new WebDriverWait(driver,10);
         wait.until(ExpectedConditions.alertIsPresent());
         Alert alert = driver.switchTo().alert();
         alert.accept();
+    }
+
+
+    @Test
+    public void task2(){
+        driver.get("https://chercher.tech/practice/explicit-wait-sample-selenium-webdriver");
+        WebElement enableButton = driver.findElement(By.id("enable-button"));
+        enableButton.click();
+        WebElement disabledButton = driver.findElement(By.id("disable"));
+        wait = new WebDriverWait(driver,12);
+        wait.until(ExpectedConditions.elementToBeClickable(disabledButton));
+        Assert.assertTrue(disabledButton.isEnabled());
     }
 
 }
